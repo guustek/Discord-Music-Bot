@@ -17,12 +17,8 @@ public class NpSlashCommand extends ApplicationCommand {
                 .getAudioPlayer()
                 .getPlayingTrack();
         if (playingTrack == null)
-            event.getHook()
-                    .editOriginalEmbeds(EmbedMessage.replyEmbed(ReplyType.INFO, "No track playing now"))
-                    .queue();
+            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.INFO, "No track playing now"));
         else
-            event.getHook()
-                    .editOriginalEmbeds(EmbedMessage.audioInfoEmbed("Currently playing ", playingTrack))
-                    .queue();
+            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildTrackInfoEmbed("Currently playing ", playingTrack));
     }
 }

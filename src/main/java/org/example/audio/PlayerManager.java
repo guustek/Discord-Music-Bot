@@ -1,14 +1,10 @@
 package org.example.audio;
 
 import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
-import com.freya02.botcommands.api.prefixed.BaseCommandEvent;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Guild;
-import org.example.EmbedMessage;
-import org.example.command.ReplyType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,25 +46,5 @@ public class PlayerManager {
                 audioUrl,
                 new TrackLoadResultHandler(manager.getScheduler(), event)
         );
-    }
-
-    public void skip(GuildSlashEvent event) {
-        AudioTrack playingTrack = this.getTrackManager(event.getGuild()).getAudioPlayer().getPlayingTrack();
-        if (playingTrack == null) {
-            event.getHook().editOriginalEmbeds(EmbedMessage.replyEmbed(ReplyType.INFO, "Nothing is playing")).queue();
-            return;
-        }
-        this.getTrackManager(event.getGuild()).getAudioPlayer().stopTrack();
-        event.getHook().editOriginalEmbeds(EmbedMessage.audioInfoEmbed("Skipped", playingTrack)).queue();
-    }
-
-    public void skip(BaseCommandEvent event) {
-        AudioTrack playingTrack = this.getTrackManager(event.getGuild()).getAudioPlayer().getPlayingTrack();
-        if (playingTrack == null) {
-            event.reply(EmbedMessage.replyEmbed(ReplyType.INFO, "Nothing is playing")).queue();
-            return;
-        }
-        this.getTrackManager(event.getGuild()).getAudioPlayer().stopTrack();
-        event.reply(EmbedMessage.audioInfoEmbed("Skipped", playingTrack)).queue();
     }
 }

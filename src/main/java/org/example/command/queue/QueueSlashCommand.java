@@ -28,17 +28,17 @@ public class QueueSlashCommand extends ApplicationCommand {
                 .getQueue();
         List<MessageEmbed> embedList = new ArrayList<>();
         if (playingTrack != null)
-            embedList.add(EmbedMessage.audioInfoEmbed("Currently playing", playingTrack));
+            embedList.add(EmbedMessage.buildTrackInfoEmbed("Currently playing", playingTrack));
         else {
             if (queue.isEmpty()) {
-                event.getHook().editOriginalEmbeds(EmbedMessage.replyEmbed(ReplyType.SUCCESS, "Queue is empty")).queue();
+                EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.SUCCESS, "Queue is empty"));
                 return;
             }
         }
         embedList.addAll(queue.stream()
-                .map(audioTrack -> EmbedMessage.audioInfoEmbed("Waiting", audioTrack))
+                .map(audioTrack -> EmbedMessage.buildTrackInfoEmbed("Waiting", audioTrack))
                 .toList());
         embedList = EmbedMessage.limitTracksEmbeds(embedList);
-        event.getHook().editOriginalEmbeds(embedList).queue();
+        EmbedMessage.replyWithEmbed(event, embedList);
     }
 }

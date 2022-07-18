@@ -1,8 +1,8 @@
 package org.example.command.clear;
 
-import com.freya02.botcommands.api.application.ApplicationCommand;
-import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
-import com.freya02.botcommands.api.application.slash.annotations.JDASlashCommand;
+import com.freya02.botcommands.api.prefixed.BaseCommandEvent;
+import com.freya02.botcommands.api.prefixed.TextCommand;
+import com.freya02.botcommands.api.prefixed.annotations.JDATextCommand;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.example.EmbedMessage;
 import org.example.audio.PlayerManager;
@@ -10,11 +10,9 @@ import org.example.command.ReplyType;
 
 import java.util.concurrent.BlockingDeque;
 
-public class ClearSlashCommand extends ApplicationCommand {
-
-    @JDASlashCommand(name = "clear", description = "Clears the track queue. This command does not remove currently playing track")
-    public void handle(GuildSlashEvent event) {
-        event.deferReply().queue();
+public class ClearTextCommand extends TextCommand {
+    @JDATextCommand(name = "clear", description = "Clears the track queue. This command does not remove currently playing track")
+    public void handle(BaseCommandEvent event) {
         BlockingDeque<AudioTrack> queue = PlayerManager.getPlayerManager()
                 .getTrackManager(event.getGuild())
                 .getScheduler()

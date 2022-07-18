@@ -19,10 +19,10 @@ public class PauseSlashCommand extends ApplicationCommand {
                 .getAudioPlayer();
         var playingTrack = audioPlayer.getPlayingTrack();
         if (playingTrack == null) {
-            event.getHook().editOriginalEmbeds(EmbedMessage.replyEmbed(ReplyType.INFO, "No track is playing")).queue();
+            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.INFO, "No track is playing"));
             return;
         }
         audioPlayer.setPaused(true);
-        event.getHook().editOriginal(MarkdownUtil.bold(":pause_button: Paused. Use /resume to resume")).queue();
+        EmbedMessage.replyWithText(event, MarkdownUtil.bold(":pause_button: Paused. Use /resume to resume"));
     }
 }

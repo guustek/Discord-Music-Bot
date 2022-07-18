@@ -18,10 +18,10 @@ public class ResumeSlashCommand extends ApplicationCommand {
                 .getTrackManager(event.getGuild())
                 .getAudioPlayer();
         if (! audioPlayer.isPaused()) {
-            event.getHook().editOriginalEmbeds(EmbedMessage.replyEmbed(ReplyType.INFO, "Player is not paused")).queue();
+            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.INFO, "Player is not paused"));
             return;
         }
         audioPlayer.setPaused(false);
-        event.getHook().editOriginal(MarkdownUtil.bold(":play_pause: Resumed player")).queue();
+        EmbedMessage.replyWithText(event, MarkdownUtil.bold(":play_pause: Resumed player"));
     }
 }

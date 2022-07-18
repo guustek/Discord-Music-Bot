@@ -25,9 +25,9 @@ public class TrackLoadResultHandler implements AudioLoadResultHandler {
     public void trackLoaded(AudioTrack audioTrack) {
         var startedPlaying = trackScheduler.queue(audioTrack, event);
         if (startedPlaying)
-            event.getHook().editOriginalEmbeds(EmbedMessage.audioInfoEmbed("Currently playing", audioTrack)).queue();
+            event.getHook().editOriginalEmbeds(EmbedMessage.buildTrackInfoEmbed("Currently playing", audioTrack)).queue();
         else
-            event.getHook().editOriginalEmbeds(EmbedMessage.audioInfoEmbed("Added to queue", audioTrack)).queue();
+            event.getHook().editOriginalEmbeds(EmbedMessage.buildTrackInfoEmbed("Added to queue", audioTrack)).queue();
 
     }
 
@@ -38,20 +38,20 @@ public class TrackLoadResultHandler implements AudioLoadResultHandler {
         if (audioPlaylist.isSearchResult()) {
             var startedPlaying = trackScheduler.queue(firstTrack, event);
             if (startedPlaying)
-                event.getHook().editOriginalEmbeds(EmbedMessage.audioInfoEmbed("Currently playing", firstTrack)).queue();
+                event.getHook().editOriginalEmbeds(EmbedMessage.buildTrackInfoEmbed("Currently playing", firstTrack)).queue();
             else
-                event.getHook().editOriginalEmbeds(EmbedMessage.audioInfoEmbed("Added to queue", firstTrack)).queue();
+                event.getHook().editOriginalEmbeds(EmbedMessage.buildTrackInfoEmbed("Added to queue", firstTrack)).queue();
         }
         else {
             List<MessageEmbed> embedList = new ArrayList<>();
             if (playingTrack == null) {
                 trackScheduler.queue(firstTrack, event);
-                embedList.add(EmbedMessage.audioInfoEmbed("Currently playing", firstTrack));
+                embedList.add(EmbedMessage.buildTrackInfoEmbed("Currently playing", firstTrack));
             }
             audioPlaylist.getTracks().stream().skip(1).forEach(track -> trackScheduler.queue(track, event));
 
             embedList.addAll(trackScheduler.getQueue().stream()
-                    .map(audioTrack -> EmbedMessage.audioInfoEmbed("Added to queue", audioTrack))
+                    .map(audioTrack -> EmbedMessage.buildTrackInfoEmbed("Added to queue", audioTrack))
                     .toList());
             embedList = EmbedMessage.limitTracksEmbeds(embedList);
             event.getHook().editOriginalEmbeds(embedList).queue();

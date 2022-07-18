@@ -30,12 +30,12 @@ public class JoinSlashCommand extends ApplicationCommand {
         var author = event.getMember();
         var authorVoiceState = author.getVoiceState();
         if (authorVoiceState == null) {
-            event.getHook().editOriginalEmbeds(EmbedMessage.replyEmbed(ReplyType.ERROR, "Dont have VOICE_STATE cache enabled!")).queue();
+            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.ERROR, "Dont have VOICE_STATE cache enabled!"));
             return;
         }
         var authorsChannel = authorVoiceState.getChannel();
         if (authorsChannel == null) {
-            event.getHook().editOriginalEmbeds(EmbedMessage.replyEmbed(ReplyType.ERROR, "You are not present on any voice channel!")).queue();
+            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.ERROR, "You are not present on any voice channel!"));
             return;
         }
         joinChannel(event, authorsChannel);
@@ -46,10 +46,10 @@ public class JoinSlashCommand extends ApplicationCommand {
         var connectedChannel = audioManager.getConnectedChannel();
         audioManager.openAudioConnection(authorsChannel);
         if (connectedChannel == null || ! connectedChannel.getId().equals(authorsChannel.getId())) {
-            event.getHook().editOriginalEmbeds(EmbedMessage.replyEmbed(ReplyType.SUCCESS, "Connected to " + authorsChannel.getName())).queue();
+            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.SUCCESS, "Connected to " + authorsChannel.getName()));
             return;
         }
-        event.getHook().editOriginalEmbeds(EmbedMessage.replyEmbed(ReplyType.SUCCESS, "Already in " + connectedChannel.getName())).queue();
+        EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.SUCCESS, "Already in " + connectedChannel.getName()));
     }
 
 }

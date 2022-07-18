@@ -29,12 +29,12 @@ public class JoinTextCommand extends TextCommand {
         var author = event.getMember();
         var authorVoiceState = author.getVoiceState();
         if (authorVoiceState == null) {
-            event.reply(EmbedMessage.replyEmbed(ReplyType.ERROR, "Dont have VOICE_STATE cache enabled!")).queue();
+            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.ERROR, "Dont have VOICE_STATE cache enabled!"));
             return;
         }
         var authorsChannel = authorVoiceState.getChannel();
         if (authorsChannel == null) {
-            event.reply(EmbedMessage.replyEmbed(ReplyType.ERROR, "You are not present on any voice channel!")).queue();
+            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.ERROR, "You are not present on any voice channel!"));
             return;
         }
         joinChannel(event, authorsChannel);
@@ -46,7 +46,7 @@ public class JoinTextCommand extends TextCommand {
             joinChannel(event, voiceChannel.get());
         }
         else {
-            event.reply(EmbedMessage.replyEmbed(ReplyType.ERROR, "Channel + " + channelName + " not found!")).queue();
+            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.ERROR, "Channel + " + channelName + " not found!"));
         }
     }
 
@@ -55,10 +55,10 @@ public class JoinTextCommand extends TextCommand {
         var connectedChannel = audioManager.getConnectedChannel();
         audioManager.openAudioConnection(authorsChannel);
         if (connectedChannel == null || ! connectedChannel.getId().equals(authorsChannel.getId())) {
-            event.reply(EmbedMessage.replyEmbed(ReplyType.SUCCESS, "Connected to " + authorsChannel.getName())).queue();
+            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.SUCCESS, "Connected to " + authorsChannel.getName()));
             return;
         }
-        event.reply(EmbedMessage.replyEmbed(ReplyType.SUCCESS, "Already in " + connectedChannel.getName())).queue();
+        EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.SUCCESS, "Already in " + connectedChannel.getName()));
     }
 
 

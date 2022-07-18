@@ -34,12 +34,12 @@ public class PlaySlashCommand extends ApplicationCommand {
         var author = event.getMember();
         var authorVoiceState = author.getVoiceState();
         if (authorVoiceState == null) {
-            event.getHook().editOriginalEmbeds(EmbedMessage.replyEmbed(ReplyType.ERROR, "Dont have VOICE_STATE cache enabled!")).queue();
+            EmbedMessage.replyWithEmbed(event,EmbedMessage.buildBasicEmbed(ReplyType.ERROR, "Dont have VOICE_STATE cache enabled!"));
             return false;
         }
         var authorsChannel = authorVoiceState.getChannel();
         if (authorsChannel == null) {
-            event.getHook().editOriginalEmbeds(EmbedMessage.replyEmbed(ReplyType.ERROR, "You are not present on any voice channel!")).queue();
+            EmbedMessage.replyWithEmbed(event,EmbedMessage.buildBasicEmbed(ReplyType.ERROR, "You are not present on any voice channel!"));
             return false;
         }
         event.getGuild().getAudioManager().openAudioConnection(authorsChannel);

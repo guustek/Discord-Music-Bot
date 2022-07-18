@@ -16,12 +16,12 @@ public class LeaveTextCommand extends TextCommand {
         var audioManager = event.getGuild().getAudioManager();
         var connectedChannel = audioManager.getConnectedChannel();
         if (connectedChannel == null) {
-            event.reply(EmbedMessage.replyEmbed(ReplyType.INFO, "Not connected to any channel")).queue();
+            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.INFO, "Not connected to any channel"));
             return;
         }
         PlayerManager playerManager = PlayerManager.getPlayerManager();
         playerManager.getTrackManager(event.getGuild()).getScheduler().getQueue().clear();
         playerManager.getTrackManager(event.getGuild()).getAudioPlayer().stopTrack();
-        event.reply(EmbedMessage.replyEmbed(ReplyType.SUCCESS, "Left " + connectedChannel.getName())).queue();
+        EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.SUCCESS, "Left " + connectedChannel.getName()));
     }
 }
