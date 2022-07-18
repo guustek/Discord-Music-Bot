@@ -5,18 +5,18 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import lombok.Getter;
 
 @Getter
-public class AudioManager {
+public class TrackManager {
 
     private final AudioPlayer audioPlayer;
 
     private final TrackScheduler scheduler;
 
-    private final AudioPlayerSendHandler sendHandler;
+    private final TrackSendHandler sendHandler;
 
-    public AudioManager(AudioPlayerManager audioPlayerManager) {
+    public TrackManager(AudioPlayerManager audioPlayerManager) {
         this.audioPlayer = audioPlayerManager.createPlayer();
         this.scheduler = new TrackScheduler(audioPlayer);
         this.audioPlayer.addListener(this.scheduler);
-        this.sendHandler = new AudioPlayerSendHandler(this.audioPlayer);
+        this.sendHandler = new TrackSendHandler(this.audioPlayer);
     }
 }

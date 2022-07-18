@@ -1,10 +1,14 @@
 package org.example.audio;
 
+import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
+import com.freya02.botcommands.api.prefixed.BaseCommandEvent;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import net.dv8tion.jda.api.entities.AudioChannel;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Guild;
+import org.example.EmbedMessage;
+import org.example.command.ReplyType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,31 +23,52 @@ public class PlayerManager {
         return playerManager;
     }
 
-    private final Map<Long, AudioManager> audioManagers;
+    private final Map<Long, TrackManager> trackManagers;
+
     private final AudioPlayerManager audioPlayerManager;
 
     private PlayerManager() {
-        this.audioManagers = new HashMap<>();
+        this.trackManagers = new HashMap<>();
         this.audioPlayerManager = new DefaultAudioPlayerManager();
 
         AudioSourceManagers.registerRemoteSources(this.audioPlayerManager);
         AudioSourceManagers.registerLocalSource(this.audioPlayerManager);
     }
 
-    public AudioManager getAudioManager(Guild guild) {
-        return this.audioManagers.computeIfAbsent(guild.getIdLong(), guildId -> {
-            final AudioManager manager = new AudioManager(this.audioPlayerManager);
+    public TrackManager getTrackManager(Guild guild) {
+        return this.trackManagers.computeIfAbsent(guild.getIdLong(), guildId -> {
+            final TrackManager manager = new TrackManager(this.audioPlayerManager);
             guild.getAudioManager().setSendingHandler(manager.getSendHandler());
             return manager;
         });
     }
 
-    public void loadAndPlay(AudioChannel channel, String audioUrl) {
-        AudioManager manager = this.getAudioManager(channel.getGuild());
+    public void searchAndLoadTrack(GuildSlashEvent event, String audioUrl) {
+        TrackManager manager = this.getTrackManager(event.getGuild());
         this.audioPlayerManager.loadItemOrdered(
                 manager,
                 audioUrl,
-                new AudioLoadResultHandlerImpl(manager.getScheduler())
+                new TrackLoadResultHandler(manager.getScheduler(), event)
         );
+    }
+
+    public void skip(GuildSlashEvent event) {
+        AudioTrack playingTrack = this.getTrackManager(event.getGuild()).getAudioPlayer().getPlayingTrack();
+        if (playingTrack == null) {
+            event.getHook().editOriginalEmbeds(EmbedMessage.replyEmbed(ReplyType.INFO, "Nothing is playing")).queue();
+            return;
+        }
+        this.getTrackManager(event.getGuild()).getAudioPlayer().stopTrack();
+        event.getHook().editOriginalEmbeds(EmbedMessage.audioInfoEmbed("Skipped", playingTrack)).queue();
+    }
+
+    public void skip(BaseCommandEvent event) {
+        AudioTrack playingTrack = this.getTrackManager(event.getGuild()).getAudioPlayer().getPlayingTrack();
+        if (playingTrack == null) {
+            event.reply(EmbedMessage.replyEmbed(ReplyType.INFO, "Nothing is playing")).queue();
+            return;
+        }
+        this.getTrackManager(event.getGuild()).getAudioPlayer().stopTrack();
+        event.reply(EmbedMessage.audioInfoEmbed("Skipped", playingTrack)).queue();
     }
 }

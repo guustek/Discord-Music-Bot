@@ -28,7 +28,6 @@ public class Bot {
             //GatewayIntent.GUILD_MEMBERS,
             //GatewayIntent.GUILD_PRESENCES
     );
-    private JDA jda;
     private final Properties properties;
 
     public Bot() {
@@ -58,7 +57,7 @@ public class Bot {
 
     public void start() {
         try {
-            this.jda = JDABuilder
+            JDA jda = JDABuilder
                     .create(properties.getProperty(TOKEN_PROPERTY_KEY), INTENTS)
                     .setActivity(Activity.playing("Jebać javascript"))
                     .setStatus(OnlineStatus.ONLINE)
@@ -66,9 +65,6 @@ public class Bot {
                     .awaitReady();
             var builder = CommandsBuilder.newBuilder(996830793433366568L)
                     .textCommandBuilder(textCommandsBuilder -> textCommandsBuilder.addPrefix(properties.getProperty(COMMAND_PREFIX_PROPERTY_KEY)));
-            builder.extensionsBuilder(extensionsBuilder -> {
-
-            });
             builder.build(jda, this.getClass().getPackageName());
         } catch (LoginException | InterruptedException | IOException e) {
             throw new RuntimeException(e);

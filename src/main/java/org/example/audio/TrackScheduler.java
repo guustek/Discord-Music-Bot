@@ -1,34 +1,40 @@
 package org.example.audio;
 
+import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import lombok.Getter;
 
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
 @Getter
 public class TrackScheduler extends AudioEventAdapter {
 
     private final AudioPlayer audioPlayer;
-    private final BlockingQueue<AudioTrack> queue;
+    private final BlockingDeque<AudioTrack> queue;
 
     public TrackScheduler(AudioPlayer audioPlayer) {
         this.audioPlayer = audioPlayer;
         this.queue = new LinkedBlockingDeque<>();
     }
 
-    public void queue(AudioTrack track) {
-        if (! this.audioPlayer.startTrack(track, true))
-            this.queue.offer(track);
+    public boolean queue(AudioTrack track, GuildSlashEvent event) {
+        track.setUserData(event.getUser());
+        var startedPlaying = this.audioPlayer.startTrack(track, true);
+        if (! startedPlaying) {
+            queue.add(track);
+        }
+        return startedPlaying;
     }
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if (endReason.mayStartNext) {
-            nextTrack();
+        if (endReason.mayStartNext || endReason == AudioTrackEndReason.STOPPED) {
+            if (! this.queue.isEmpty())
+                nextTrack();
         }
     }
 
