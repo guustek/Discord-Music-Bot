@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
@@ -36,22 +35,10 @@ public class Bot {
 
     private Properties loadProperties() {
         Properties prop = new Properties();
-        try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("bot.properties")) {
-            prop.load(inputStream);
-            String token = prop.getProperty(TOKEN_PROPERTY_KEY);
-            String command_prefix = prop.getProperty(COMMAND_PREFIX_PROPERTY_KEY);
-            if (token == null) {
-                String message = "token property not found in bot.properties";
-                throw new IllegalStateException(message);
-            }
-            if (command_prefix == null) {
-                String message = "command_prefix property not found in bot.properties";
-                throw new IllegalStateException(message);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace(System.out);
-        }
+        String token = System.getenv(TOKEN_PROPERTY_KEY);
+        String command_prefix = System.getenv(COMMAND_PREFIX_PROPERTY_KEY);
+        prop.setProperty(TOKEN_PROPERTY_KEY, token);
+        prop.setProperty(COMMAND_PREFIX_PROPERTY_KEY, command_prefix);
         return prop;
     }
 
@@ -59,7 +46,7 @@ public class Bot {
         try {
             JDA jda = JDABuilder
                     .create(properties.getProperty(TOKEN_PROPERTY_KEY), INTENTS)
-                    .setActivity(Activity.playing("Jebać javascript"))
+                    .setActivity(Activity.playing("Ram pam pam!"))
                     .setStatus(OnlineStatus.ONLINE)
                     .build()
                     .awaitReady();
