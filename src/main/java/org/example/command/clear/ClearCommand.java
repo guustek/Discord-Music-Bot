@@ -7,11 +7,15 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.Event;
 import org.example.MessageUtils;
 import org.example.audio.PlayerManager;
-import org.example.command.general.CommandExecutor;
+import org.example.command.general.BaseCommand;
 
 import java.util.concurrent.BlockingDeque;
 
-public class ClearCommandExecutor implements CommandExecutor {
+public class ClearCommand extends BaseCommand {
+
+    public static final String NAME = "clear";
+    public static final String DESCRIPTION = "Clears the track queue. This command does not remove currently playing track.";
+
     @Override
     public void execute(GuildSlashEvent event, Object... args) {
         execute(event, event.getGuild());

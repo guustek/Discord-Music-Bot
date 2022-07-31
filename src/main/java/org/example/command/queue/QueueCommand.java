@@ -1,26 +1,37 @@
 package org.example.command.queue;
 
-import com.freya02.botcommands.api.annotations.CommandMarker;
-import com.freya02.botcommands.api.application.ApplicationCommand;
 import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
-import com.freya02.botcommands.api.application.slash.annotations.JDASlashCommand;
+import com.freya02.botcommands.api.prefixed.BaseCommandEvent;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.Event;
 import org.example.MessageUtils;
 import org.example.audio.PlayerManager;
 import org.example.audio.TrackManager;
+import org.example.command.general.BaseCommand;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@CommandMarker
-public class QueueSlashCommand extends ApplicationCommand {
+public class QueueCommand extends BaseCommand {
 
-    @JDASlashCommand(name = "queue", description = "List songs in a queue")
-    public void handle(GuildSlashEvent event) {
-        event.deferReply().queue();
+    public static final String NAME = "queue";
+    public static final String DESCRIPTION = "List tracks in a queue.";
+
+    @Override
+    public void execute(GuildSlashEvent event, Object... args) {
+        displayQueue(event, event.getGuild());
+    }
+
+    @Override
+    public void execute(BaseCommandEvent event, Object... args) {
+        displayQueue(event, event.getGuild());
+    }
+
+    public void displayQueue(Event event, Guild guild) {
         PlayerManager playerManager = PlayerManager.getPlayerManager();
-        TrackManager trackManager = playerManager.getTrackManager(event.getGuild());
+        TrackManager trackManager = playerManager.getTrackManager(guild);
         AudioTrack playingTrack = trackManager.getAudioPlayer().getPlayingTrack();
         var queue = trackManager
                 .getScheduler()

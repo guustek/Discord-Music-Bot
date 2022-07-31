@@ -6,9 +6,13 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.Event;
 import org.example.MessageUtils;
 import org.example.audio.PlayerManager;
-import org.example.command.general.CommandExecutor;
+import org.example.command.general.BaseCommand;
 
-public class BassCommandExecutor implements CommandExecutor {
+public class BassCommand extends BaseCommand {
+
+    public static final String NAME = "bass";
+    public static final String DESCRIPTION = "Boosts bass by certain percentage.";
+
     @Override
     public void execute(GuildSlashEvent event, Object... args) {
         bassBoost(event, event.getGuild(), ((Number) args[0]).floatValue());

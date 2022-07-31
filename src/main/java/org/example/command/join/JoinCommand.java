@@ -7,11 +7,15 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.Event;
 import org.example.MessageUtils;
-import org.example.command.general.CommandExecutor;
+import org.example.command.general.BaseCommand;
 
 import java.util.Optional;
 
-public class JoinCommandExecutor implements CommandExecutor {
+public class JoinCommand extends BaseCommand {
+
+    public static final String NAME = "join";
+    public static final String DESCRIPTION = "Join voice channel.";
+
     @Override
     public void execute(GuildSlashEvent event, Object... args) {
         AudioChannel channel = (AudioChannel) args[0];
@@ -50,7 +54,7 @@ public class JoinCommandExecutor implements CommandExecutor {
     private Optional<AudioChannel> getAuthorsChannel(Event event, Member author) {
         var authorVoiceState = author.getVoiceState();
         if (authorVoiceState == null) {
-            MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed("Dont have VOICE_STATE cache enabled!"));
+            MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed("Can't read your voice state!"));
             return Optional.empty();
         }
         var channel = authorVoiceState.getChannel();

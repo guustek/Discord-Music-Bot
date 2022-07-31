@@ -1,10 +1,11 @@
 package org.example.audio;
 
-import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.Event;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,12 +41,12 @@ public class PlayerManager {
         });
     }
 
-    public void searchAndLoadTrack(GuildSlashEvent event, String audioUrl) {
-        TrackManager manager = this.getTrackManager(event.getGuild());
+    public void searchAndLoadTrack(Event event, Member author, String audioUrl) {
+        TrackManager manager = this.getTrackManager(author.getGuild());
         this.audioPlayerManager.loadItemOrdered(
                 manager,
                 audioUrl,
-                new TrackLoadResultHandler(manager.getScheduler(), event)
+                new TrackLoadResultHandler(manager.getScheduler(), event, author.getUser())
         );
     }
 

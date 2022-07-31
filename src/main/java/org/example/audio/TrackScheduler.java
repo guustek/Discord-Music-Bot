@@ -1,11 +1,11 @@
 package org.example.audio;
 
-import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import lombok.Getter;
+import net.dv8tion.jda.api.entities.User;
 
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -21,8 +21,8 @@ public class TrackScheduler extends AudioEventAdapter {
         this.queue = new LinkedBlockingDeque<>();
     }
 
-    public boolean queue(AudioTrack track, GuildSlashEvent event) {
-        track.setUserData(event.getUser());
+    public boolean queue(AudioTrack track, User user) {
+        track.setUserData(user);
         var startedPlaying = this.audioPlayer.startTrack(track, true);
         if (! startedPlaying) {
             queue.add(track);

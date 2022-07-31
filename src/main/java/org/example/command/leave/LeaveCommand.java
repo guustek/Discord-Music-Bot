@@ -7,14 +7,17 @@ import net.dv8tion.jda.api.events.Event;
 import org.example.MessageUtils;
 import org.example.audio.PlayerManager;
 import org.example.audio.TrackManager;
-import org.example.command.general.CommandExecutor;
+import org.example.command.general.BaseCommand;
 
-public class LeaveCommandExecutor implements CommandExecutor {
+public class LeaveCommand extends BaseCommand {
+
+    public static final String NAME = "leave";
+    public static final String DESCRIPTION = "Leave voice channel.";
+
     @Override
     public void execute(GuildSlashEvent event, Object... args) {
         leave(event, event.getGuild());
     }
-
 
     @Override
     public void execute(BaseCommandEvent event, Object... args) {

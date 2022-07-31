@@ -1,11 +1,12 @@
 package org.example.audio;
 
-import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.Event;
 import org.example.MessageUtils;
 
 import java.util.ArrayList;
@@ -14,20 +15,22 @@ import java.util.List;
 public class TrackLoadResultHandler implements AudioLoadResultHandler {
 
     private final TrackScheduler trackScheduler;
-    private final GuildSlashEvent event;
+    private final Event event;
+    private final User user;
 
-    public TrackLoadResultHandler(TrackScheduler trackScheduler, GuildSlashEvent event) {
+    public TrackLoadResultHandler(TrackScheduler trackScheduler, Event event, User user) {
         this.trackScheduler = trackScheduler;
         this.event = event;
+        this.user = user;
     }
 
     @Override
     public void trackLoaded(AudioTrack audioTrack) {
-        var startedPlaying = trackScheduler.queue(audioTrack, event);
+        var startedPlaying = trackScheduler.queue(audioTrack, user);
         if (startedPlaying)
-            event.getHook().editOriginalEmbeds(MessageUtils.buildTrackInfoEmbed("Currently playing", audioTrack)).queue();
+            MessageUtils.replyWithEmbed(event, MessageUtils.buildTrackInfoEmbed("Currently playing", audioTrack));
         else
-            event.getHook().editOriginalEmbeds(MessageUtils.buildTrackInfoEmbed("Added to queue", audioTrack)).queue();
+            MessageUtils.replyWithEmbed(event, MessageUtils.buildTrackInfoEmbed("Added to queue", audioTrack));
 
     }
 
@@ -36,35 +39,35 @@ public class TrackLoadResultHandler implements AudioLoadResultHandler {
         var firstTrack = audioPlaylist.getTracks().get(0);
         AudioTrack playingTrack = trackScheduler.getAudioPlayer().getPlayingTrack();
         if (audioPlaylist.isSearchResult()) {
-            var startedPlaying = trackScheduler.queue(firstTrack, event);
+            var startedPlaying = trackScheduler.queue(firstTrack, user);
             if (startedPlaying)
-                event.getHook().editOriginalEmbeds(MessageUtils.buildTrackInfoEmbed("Currently playing", firstTrack)).queue();
+                MessageUtils.replyWithEmbed(event, MessageUtils.buildTrackInfoEmbed("Currently playing", firstTrack));
             else
-                event.getHook().editOriginalEmbeds(MessageUtils.buildTrackInfoEmbed("Added to queue", firstTrack)).queue();
+                MessageUtils.replyWithEmbed(event, MessageUtils.buildTrackInfoEmbed("Added to queue", firstTrack));
         }
         else {
             List<MessageEmbed> embedList = new ArrayList<>();
             if (playingTrack == null) {
-                trackScheduler.queue(firstTrack, event);
+                trackScheduler.queue(firstTrack, user);
                 embedList.add(MessageUtils.buildTrackInfoEmbed("Currently playing", firstTrack));
             }
-            audioPlaylist.getTracks().stream().skip(1).forEach(track -> trackScheduler.queue(track, event));
+            audioPlaylist.getTracks().stream().skip(1).forEach(track -> trackScheduler.queue(track, user));
 
             embedList.addAll(trackScheduler.getQueue().stream()
                     .map(audioTrack -> MessageUtils.buildTrackInfoEmbed("Added to queue", audioTrack))
                     .toList());
             embedList = MessageUtils.limitTracksEmbeds(embedList);
-            event.getHook().editOriginalEmbeds(embedList).queue();
+            MessageUtils.replyWithEmbed(event, embedList);
         }
     }
 
     @Override
     public void noMatches() {
-        event.getHook().editOriginal("Not found").queue();
+        MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed("Not found"));
     }
 
     @Override
     public void loadFailed(FriendlyException e) {
-        event.getHook().editOriginal("Load failed").queue();
+        MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed("Load failed"));
     }
 }

@@ -5,20 +5,20 @@ import com.freya02.botcommands.api.annotations.Optional;
 import com.freya02.botcommands.api.prefixed.BaseCommandEvent;
 import com.freya02.botcommands.api.prefixed.annotations.JDATextCommand;
 import com.freya02.botcommands.api.prefixed.annotations.TextOption;
-import org.example.command.general.BaseTextCommand;
-import org.example.command.general.CommandExecutor;
+import org.example.command.general.BaseTextHandler;
+import org.example.command.general.Command;
 
 @CommandMarker
-public class JoinTextCommandHandler extends BaseTextCommand {
+public class JoinTextHandler extends BaseTextHandler {
 
-    public JoinTextCommandHandler(CommandExecutor commandExecutor) {
-        super(commandExecutor);
+    public JoinTextHandler(Command command) {
+        super(command);
     }
 
-    @JDATextCommand(name = "join", description = "Join voice channel")
+    @JDATextCommand(name = JoinCommand.NAME, description = JoinCommand.DESCRIPTION)
     public void handle(
             BaseCommandEvent event,
             @Optional @TextOption(name = "Channel name") String channelName) {
-        commandExecutor.execute(event, channelName);
+        command.execute(event, channelName);
     }
 }

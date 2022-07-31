@@ -4,16 +4,16 @@ import com.freya02.botcommands.api.application.annotations.AppOption;
 import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
 import com.freya02.botcommands.api.application.slash.annotations.DoubleRange;
 import com.freya02.botcommands.api.application.slash.annotations.JDASlashCommand;
-import org.example.command.general.BaseSlashCommand;
-import org.example.command.general.CommandExecutor;
+import org.example.command.general.BaseSlashHandler;
+import org.example.command.general.Command;
 
-public class BassSlashCommandHandler extends BaseSlashCommand {
+public class BassSlashHandler extends BaseSlashHandler {
 
-    public BassSlashCommandHandler(CommandExecutor commandExecutor) {
-        super(commandExecutor);
+    public BassSlashHandler(Command command) {
+        super(command);
     }
 
-    @JDASlashCommand(name = "bass", description = "Boosts bass by certain percentage")
+    @JDASlashCommand(name = BassCommand.NAME, description = BassCommand.DESCRIPTION)
     public void handle(
             GuildSlashEvent event,
             @AppOption(
@@ -22,6 +22,6 @@ public class BassSlashCommandHandler extends BaseSlashCommand {
             @DoubleRange(from = 0, to = 200)
             double percentage) {
         event.deferReply().queue();
-        commandExecutor.execute(event, percentage);
+        command.execute(event, percentage);
     }
 }
