@@ -5,9 +5,8 @@ import com.freya02.botcommands.api.application.ApplicationCommand;
 import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
 import com.freya02.botcommands.api.application.slash.annotations.JDASlashCommand;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import org.example.EmbedMessage;
+import org.example.MessageUtils;
 import org.example.audio.PlayerManager;
-import org.example.command.ReplyType;
 
 @CommandMarker
 public class SkipSlashCommand extends ApplicationCommand {
@@ -18,10 +17,10 @@ public class SkipSlashCommand extends ApplicationCommand {
         PlayerManager playerManager = PlayerManager.getPlayerManager();
         AudioTrack playingTrack = playerManager.getTrackManager(event.getGuild()).getAudioPlayer().getPlayingTrack();
         if (playingTrack == null) {
-            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.INFO, "Nothing is playing"));
+            MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed("Nothing is playing"));
             return;
         }
         playerManager.getTrackManager(event.getGuild()).getAudioPlayer().stopTrack();
-        EmbedMessage.replyWithEmbed(event, EmbedMessage.buildTrackInfoEmbed("Skipped", playingTrack));
+        MessageUtils.replyWithEmbed(event, MessageUtils.buildTrackInfoEmbed("Skipped", playingTrack));
     }
 }

@@ -7,13 +7,12 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.Event;
-import org.example.command.ReplyType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EmbedMessage {
+public class MessageUtils {
 
     public static List<MessageEmbed> limitTracksEmbeds(List<MessageEmbed> list) {
         List<MessageEmbed> result = new ArrayList<>(list);
@@ -22,7 +21,7 @@ public class EmbedMessage {
         if (resultAmount > 10)
             result.set(
                     result.size() - 1,
-                    EmbedMessage.buildBasicEmbed(ReplyType.INFO, "And " + (resultAmount - 9) + " more tracks")
+                    MessageUtils.buildBasicEmbed("And " + (resultAmount - 9) + " more tracks")
             );
         return result;
     }
@@ -61,9 +60,8 @@ public class EmbedMessage {
         }
     }
 
-    public static MessageEmbed buildBasicEmbed(ReplyType replyType, String text) {
+    public static MessageEmbed buildBasicEmbed(String text) {
         return new EmbedBuilder()
-                //.setColor(replyType.getColor())
                 .setDescription(text)
                 .build();
     }

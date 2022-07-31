@@ -3,9 +3,8 @@ package org.example.command.np;
 import com.freya02.botcommands.api.application.ApplicationCommand;
 import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
 import com.freya02.botcommands.api.application.slash.annotations.JDASlashCommand;
-import org.example.EmbedMessage;
+import org.example.MessageUtils;
 import org.example.audio.PlayerManager;
-import org.example.command.ReplyType;
 
 public class NpSlashCommand extends ApplicationCommand {
 
@@ -17,8 +16,8 @@ public class NpSlashCommand extends ApplicationCommand {
                 .getAudioPlayer()
                 .getPlayingTrack();
         if (playingTrack == null)
-            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.INFO, "No track playing now"));
+            MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed("No track playing now"));
         else
-            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildTrackInfoEmbed("Currently playing ", playingTrack));
+            MessageUtils.replyWithEmbed(event, MessageUtils.buildTrackInfoEmbed("Currently playing ", playingTrack));
     }
 }

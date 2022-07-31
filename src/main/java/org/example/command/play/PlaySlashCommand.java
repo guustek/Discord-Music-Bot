@@ -5,9 +5,8 @@ import com.freya02.botcommands.api.application.ApplicationCommand;
 import com.freya02.botcommands.api.application.annotations.AppOption;
 import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
 import com.freya02.botcommands.api.application.slash.annotations.JDASlashCommand;
-import org.example.EmbedMessage;
+import org.example.MessageUtils;
 import org.example.audio.PlayerManager;
-import org.example.command.ReplyType;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,7 +15,7 @@ import java.net.URL;
 public class PlaySlashCommand extends ApplicationCommand {
 
     @JDASlashCommand(name = "play", description = "Play track or playlist")
-    public void playFromUrl(
+    public void play(
             GuildSlashEvent event,
             @AppOption(name = "search", description = "Url or name") String search) {
         event.deferReply().queue();
@@ -34,12 +33,12 @@ public class PlaySlashCommand extends ApplicationCommand {
         var author = event.getMember();
         var authorVoiceState = author.getVoiceState();
         if (authorVoiceState == null) {
-            EmbedMessage.replyWithEmbed(event,EmbedMessage.buildBasicEmbed(ReplyType.ERROR, "Dont have VOICE_STATE cache enabled!"));
+            MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed("Dont have VOICE_STATE cache enabled!"));
             return false;
         }
         var authorsChannel = authorVoiceState.getChannel();
         if (authorsChannel == null) {
-            EmbedMessage.replyWithEmbed(event,EmbedMessage.buildBasicEmbed(ReplyType.ERROR, "You are not present on any voice channel!"));
+            MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed("You are not present on any voice channel!"));
             return false;
         }
         event.getGuild().getAudioManager().openAudioConnection(authorsChannel);

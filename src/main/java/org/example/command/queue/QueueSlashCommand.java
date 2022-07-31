@@ -6,10 +6,9 @@ import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
 import com.freya02.botcommands.api.application.slash.annotations.JDASlashCommand;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import org.example.EmbedMessage;
+import org.example.MessageUtils;
 import org.example.audio.PlayerManager;
 import org.example.audio.TrackManager;
-import org.example.command.ReplyType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +27,17 @@ public class QueueSlashCommand extends ApplicationCommand {
                 .getQueue();
         List<MessageEmbed> embedList = new ArrayList<>();
         if (playingTrack != null)
-            embedList.add(EmbedMessage.buildTrackInfoEmbed("Currently playing", playingTrack));
+            embedList.add(MessageUtils.buildTrackInfoEmbed("Currently playing", playingTrack));
         else {
             if (queue.isEmpty()) {
-                EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.SUCCESS, "Queue is empty"));
+                MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed("Queue is empty"));
                 return;
             }
         }
         embedList.addAll(queue.stream()
-                .map(audioTrack -> EmbedMessage.buildTrackInfoEmbed("Waiting", audioTrack))
+                .map(audioTrack -> MessageUtils.buildTrackInfoEmbed("Waiting", audioTrack))
                 .toList());
-        embedList = EmbedMessage.limitTracksEmbeds(embedList);
-        EmbedMessage.replyWithEmbed(event, embedList);
+        embedList = MessageUtils.limitTracksEmbeds(embedList);
+        MessageUtils.replyWithEmbed(event, embedList);
     }
 }

@@ -5,9 +5,8 @@ import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
 import com.freya02.botcommands.api.application.slash.annotations.JDASlashCommand;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.example.EmbedMessage;
+import org.example.MessageUtils;
 import org.example.audio.PlayerManager;
-import org.example.command.ReplyType;
 
 public class PauseSlashCommand extends ApplicationCommand {
 
@@ -19,10 +18,10 @@ public class PauseSlashCommand extends ApplicationCommand {
                 .getAudioPlayer();
         var playingTrack = audioPlayer.getPlayingTrack();
         if (playingTrack == null) {
-            EmbedMessage.replyWithEmbed(event, EmbedMessage.buildBasicEmbed(ReplyType.INFO, "No track is playing"));
+            MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed("No track is playing"));
             return;
         }
         audioPlayer.setPaused(true);
-        EmbedMessage.replyWithText(event, MarkdownUtil.bold(":pause_button: Paused. Use /resume to resume"));
+        MessageUtils.replyWithText(event, MarkdownUtil.bold(":pause_button: Paused. Use /resume to resume"));
     }
 }

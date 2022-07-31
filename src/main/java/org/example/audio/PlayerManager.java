@@ -26,6 +26,7 @@ public class PlayerManager {
     private PlayerManager() {
         this.trackManagers = new HashMap<>();
         this.audioPlayerManager = new DefaultAudioPlayerManager();
+        this.audioPlayerManager.getConfiguration().setFilterHotSwapEnabled(true);
 
         AudioSourceManagers.registerRemoteSources(this.audioPlayerManager);
         AudioSourceManagers.registerLocalSource(this.audioPlayerManager);
@@ -47,4 +48,5 @@ public class PlayerManager {
                 new TrackLoadResultHandler(manager.getScheduler(), event)
         );
     }
+
 }
