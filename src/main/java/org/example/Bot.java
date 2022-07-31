@@ -28,6 +28,8 @@ import org.example.command.pause.PauseTextHandler;
 import org.example.command.play.PlayCommand;
 import org.example.command.play.PlaySlashHandler;
 import org.example.command.play.PlayTextHandler;
+import org.example.command.pope.PopeCommand;
+import org.example.command.pope.PopeTextHandler;
 import org.example.command.queue.QueueCommand;
 import org.example.command.queue.QueueSlashHandler;
 import org.example.command.queue.QueueTextHandler;
@@ -131,5 +133,8 @@ public class Bot {
         var skipCommand = new SkipCommand();
         builder.registerInstanceSupplier(SkipTextHandler.class, ctx -> new SkipTextHandler(skipCommand));
         builder.registerInstanceSupplier(SkipSlashHandler.class, ctx -> new SkipSlashHandler(skipCommand));
+
+        var popeCommand = new PopeCommand();
+        builder.registerInstanceSupplier(PopeTextHandler.class, ctx -> new PopeTextHandler(popeCommand));
     }
 }

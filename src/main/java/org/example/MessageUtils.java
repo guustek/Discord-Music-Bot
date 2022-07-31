@@ -31,6 +31,8 @@ public class MessageUtils {
     }
 
     public static void replyWithEmbed(Event event, List<MessageEmbed> embeds) {
+        if(event==null)
+            return;
         if (event instanceof GuildSlashEvent slashEvent) {
             if (slashEvent.isAcknowledged())
                 slashEvent.getHook().editOriginalEmbeds(embeds).queue();
