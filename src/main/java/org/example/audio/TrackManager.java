@@ -3,9 +3,7 @@ package org.example.audio;
 import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import lombok.Getter;
 
-@Getter
 public class TrackManager {
 
     private static final float[] BASS_BOOST = {
@@ -52,5 +50,17 @@ public class TrackManager {
         for (int i = 0; i < BASS_BOOST.length; i++) {
             equalizerFactory.setGain(i, BASS_BOOST[i] * multiplier);
         }
+    }
+
+    public TrackScheduler getScheduler() {
+        return scheduler;
+    }
+
+    public AudioPlayer getAudioPlayer() {
+        return audioPlayer;
+    }
+
+    public TrackSendHandler getSendHandler() {
+        return sendHandler;
     }
 }

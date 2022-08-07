@@ -6,6 +6,7 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.Event;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class PlayerManager {
         });
     }
 
-    public void searchAndLoadTrack(Event event, Member author, String audioUrl) {
+    public void searchAndLoadTrack(@Nullable Event event, Member author, String audioUrl) {
         TrackManager manager = this.getTrackManager(author.getGuild());
         this.audioPlayerManager.loadItemOrdered(
                 manager,

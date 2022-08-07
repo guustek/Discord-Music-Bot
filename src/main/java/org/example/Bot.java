@@ -29,6 +29,7 @@ import org.example.command.play.PlayCommand;
 import org.example.command.play.PlaySlashHandler;
 import org.example.command.play.PlayTextHandler;
 import org.example.command.pope.PopeCommand;
+import org.example.command.pope.PopeService;
 import org.example.command.pope.PopeTextHandler;
 import org.example.command.queue.QueueCommand;
 import org.example.command.queue.QueueSlashHandler;
@@ -56,11 +57,12 @@ public class Bot {
             GatewayIntent.DIRECT_MESSAGES,
             GatewayIntent.GUILD_MESSAGES,
             GatewayIntent.GUILD_MESSAGE_REACTIONS,
-            GatewayIntent.GUILD_VOICE_STATES
-            //GatewayIntent.GUILD_MEMBERS,
+            GatewayIntent.GUILD_VOICE_STATES,
+            GatewayIntent.GUILD_MEMBERS
             //GatewayIntent.GUILD_PRESENCES
     );
     private final Properties properties;
+    private JDA jda;
 
     public Bot() {
         this.properties = loadProperties();
@@ -77,7 +79,7 @@ public class Bot {
 
     public void start() {
         try {
-            JDA jda = JDABuilder
+            this.jda = JDABuilder
                     .create(properties.getProperty(TOKEN_PROPERTY_KEY), INTENTS)
                     .setActivity(Activity.playing("Ram pam pam!"))
                     .setStatus(OnlineStatus.ONLINE)
@@ -134,7 +136,9 @@ public class Bot {
         builder.registerInstanceSupplier(SkipTextHandler.class, ctx -> new SkipTextHandler(skipCommand));
         builder.registerInstanceSupplier(SkipSlashHandler.class, ctx -> new SkipSlashHandler(skipCommand));
 
-        var popeCommand = new PopeCommand();
+        var popeService = new PopeService(this.jda);
+        this.jda.addEventListener(popeService);
+        var popeCommand = new PopeCommand(popeService);
         builder.registerInstanceSupplier(PopeTextHandler.class, ctx -> new PopeTextHandler(popeCommand));
     }
 }

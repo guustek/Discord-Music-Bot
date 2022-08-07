@@ -3,37 +3,35 @@ package org.example.command.pope;
 import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
 import com.freya02.botcommands.api.prefixed.BaseCommandEvent;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.dv8tion.jda.api.managers.AudioManager;
-import org.example.audio.PlayerManager;
+import net.dv8tion.jda.api.events.Event;
+import org.example.MessageUtils;
 import org.example.command.general.BaseCommand;
-
-import java.time.LocalTime;
-import java.util.List;
 
 public class PopeCommand extends BaseCommand {
 
     public static final String NAME = "pope";
     public static final String DESCRIPTION = "2137.";
 
+    private final PopeService popeService;
+
+    public PopeCommand(PopeService popeService) {
+        this.popeService = popeService;
+    }
+
     @Override
     public void execute(GuildSlashEvent event, Object... args) {
-
+        toggle(event, event.getGuild());
     }
 
     @Override
     public void execute(BaseCommandEvent event, Object... args) {
-        System.out.println("Papieżowa komenda uruchomiona");
-        var timeNow = LocalTime.now();
-        System.out.println("Aktualny czas: " + timeNow);
-        notify(event.getGuild());
+        toggle(event,event.getGuild());
     }
 
-    private void notify(Guild guild) {
-        List<VoiceChannel> voiceChannels = guild.getVoiceChannels();
-        VoiceChannel channel = voiceChannels.stream().filter(voiceChannel -> voiceChannel.getName().equals("Ogólne")).findFirst().get();
-        AudioManager audioManager = guild.getAudioManager();
-        audioManager.openAudioConnection(channel);
-        PlayerManager.getPlayerManager().searchAndLoadTrack(null, guild.getSelfMember(), "https://www.youtube.com/watch?v=1dOt_VcbgyA");
+    private void toggle(Event event, Guild guild) {
+        boolean result = popeService.toggleEnabledOnGuild(guild.getIdLong());
+        String message = result ? "Enabled" : "Disabled";
+        MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed(message + " pope service"));
+        
     }
 }
