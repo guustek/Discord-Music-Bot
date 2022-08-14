@@ -77,14 +77,12 @@ public class PopeService extends ListenerAdapter implements Runnable {
                     track.getInfo().uri);
         }
         System.out.println("Bareczka jest grana na " + guild + "/" + channelToPlay.getName());
-
-
     }
 
     private long calculateDelay() {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Warsaw"));
         ZonedDateTime next = now.withHour(21).withMinute(37).withSecond(0);
-        if (now.compareTo(next) >= 0)
+        if (now.compareTo(next) > 0)
             next = next.plusDays(1);
         Duration duration = Duration.between(now, next);
         return duration.getSeconds();
