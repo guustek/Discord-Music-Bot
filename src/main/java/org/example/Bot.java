@@ -137,7 +137,6 @@ public class Bot {
         builder.registerInstanceSupplier(SkipSlashHandler.class, ctx -> new SkipSlashHandler(skipCommand));
 
         var popeService = new PopeService(this.jda);
-        this.jda.addEventListener(popeService);
         var popeCommand = new PopeCommand(popeService);
         builder.registerInstanceSupplier(PopeTextHandler.class, ctx -> new PopeTextHandler(popeCommand));
     }

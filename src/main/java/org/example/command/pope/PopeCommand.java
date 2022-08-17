@@ -2,10 +2,11 @@ package org.example.command.pope;
 
 import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
 import com.freya02.botcommands.api.prefixed.BaseCommandEvent;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.Event;
 import org.example.MessageUtils;
 import org.example.command.general.BaseCommand;
+
+import java.util.concurrent.TimeUnit;
 
 public class PopeCommand extends BaseCommand {
 
@@ -20,18 +21,22 @@ public class PopeCommand extends BaseCommand {
 
     @Override
     public void execute(GuildSlashEvent event, Object... args) {
-        toggle(event, event.getGuild());
+        time(event);
     }
 
     @Override
     public void execute(BaseCommandEvent event, Object... args) {
-        toggle(event,event.getGuild());
+        time(event);
     }
 
-    private void toggle(Event event, Guild guild) {
-        boolean result = popeService.toggleEnabledOnGuild(guild.getIdLong());
-        String message = result ? "Enabled" : "Disabled";
-        MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed(message + " pope service"));
-        
+    private void time(Event event) {
+        long delayMilis = popeService.calculateDelay();
+        String result = String.format("%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(delayMilis),
+                TimeUnit.MILLISECONDS.toMinutes(delayMilis) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(delayMilis)),
+                TimeUnit.MILLISECONDS.toSeconds(delayMilis) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(delayMilis)));
+        MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed(result));
     }
 }
