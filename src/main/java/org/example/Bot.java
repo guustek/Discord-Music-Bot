@@ -30,6 +30,7 @@ import org.example.command.play.PlaySlashHandler;
 import org.example.command.play.PlayTextHandler;
 import org.example.command.pope.PopeCommand;
 import org.example.command.pope.PopeService;
+import org.example.command.pope.PopeSlashHandler;
 import org.example.command.pope.PopeTextHandler;
 import org.example.command.queue.QueueCommand;
 import org.example.command.queue.QueueSlashHandler;
@@ -139,5 +140,6 @@ public class Bot {
         var popeService = new PopeService(this.jda);
         var popeCommand = new PopeCommand(popeService);
         builder.registerInstanceSupplier(PopeTextHandler.class, ctx -> new PopeTextHandler(popeCommand));
+        builder.registerInstanceSupplier(PopeSlashHandler.class, ctx -> new PopeSlashHandler(popeCommand));
     }
 }

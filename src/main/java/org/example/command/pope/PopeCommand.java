@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.Event;
 import org.example.MessageUtils;
 import org.example.command.general.BaseCommand;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 public class PopeCommand extends BaseCommand {
 
@@ -30,13 +30,11 @@ public class PopeCommand extends BaseCommand {
     }
 
     private void time(Event event) {
-        long delayMilis = popeService.calculateDelay();
-        String result = String.format("%02d:%02d:%02d",
-                TimeUnit.MILLISECONDS.toHours(delayMilis),
-                TimeUnit.MILLISECONDS.toMinutes(delayMilis) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(delayMilis)),
-                TimeUnit.MILLISECONDS.toSeconds(delayMilis) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(delayMilis)));
+        Duration duration = popeService.calculateDelay();
+        String result = String.format("%d:%02d:%02d",
+                duration.toHours(),
+                duration.toMinutesPart(),
+                duration.toSecondsPart());
         MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed(result));
     }
 }

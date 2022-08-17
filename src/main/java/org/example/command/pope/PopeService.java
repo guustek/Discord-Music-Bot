@@ -25,12 +25,12 @@ public class PopeService implements Runnable {
     public PopeService(JDA jda) {
         this.jda = jda;
         executorService = new ScheduledThreadPoolExecutor(1);
-        executorService.schedule(this, calculateDelay(), TimeUnit.SECONDS);
+        executorService.schedule(this, calculateDelay().getSeconds(), TimeUnit.SECONDS);
     }
 
     @Override
     public void run() {
-        executorService.schedule(this, calculateDelay(), TimeUnit.SECONDS);
+        executorService.schedule(this, calculateDelay().getSeconds(), TimeUnit.SECONDS);
         jda.getGuilds()
                 .forEach(guild -> playBareczka(guild.getIdLong()));
     }
@@ -71,12 +71,11 @@ public class PopeService implements Runnable {
         System.out.println("Bareczka jest grana na " + guild + "/" + channelToPlay.getName());
     }
 
-    public long calculateDelay() {
+    public Duration calculateDelay() {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Warsaw"));
         ZonedDateTime next = now.withHour(21).withMinute(37).withSecond(0);
         if (now.compareTo(next) > 0)
             next = next.plusDays(1);
-        Duration duration = Duration.between(now, next);
-        return duration.getSeconds();
+        return Duration.between(now, next);
     }
 }
