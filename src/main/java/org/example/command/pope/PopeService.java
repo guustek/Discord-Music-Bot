@@ -1,5 +1,17 @@
 package org.example.command.pope;
 
+import java.time.Duration;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -8,14 +20,6 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.example.audio.PlayerManager;
 import org.example.audio.TrackScheduler;
-
-import java.time.Duration;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.*;
 
 public class PopeService implements Runnable {
 
@@ -74,7 +78,7 @@ public class PopeService implements Runnable {
     public Duration calculateDelay() {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Warsaw"));
         ZonedDateTime next = now.withHour(21).withMinute(37).withSecond(0);
-        if (now.compareTo(next) > 0)
+        if (now.compareTo(next) >= 0)
             next = next.plusDays(1);
         return Duration.between(now, next);
     }
