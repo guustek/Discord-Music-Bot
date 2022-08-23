@@ -30,6 +30,7 @@ public class TrackManager {
 
     private final TrackSendHandler sendHandler;
 
+
     public TrackManager(AudioPlayerManager audioPlayerManager) {
         this.audioPlayer = audioPlayerManager.createPlayer();
         this.scheduler = new TrackScheduler(audioPlayer);

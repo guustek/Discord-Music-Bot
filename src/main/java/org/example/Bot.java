@@ -1,5 +1,12 @@
 package org.example;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.security.auth.login.LoginException;
+
 import com.freya02.botcommands.api.CommandsBuilder;
 import com.freya02.botcommands.api.builder.ExtensionsBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -19,6 +26,9 @@ import org.example.command.join.JoinTextHandler;
 import org.example.command.leave.LeaveCommand;
 import org.example.command.leave.LeaveSlashHandler;
 import org.example.command.leave.LeaveTextHandler;
+import org.example.command.loop.LoopCommand;
+import org.example.command.loop.LoopSlashHandler;
+import org.example.command.loop.LoopTextHandler;
 import org.example.command.np.NpCommand;
 import org.example.command.np.NpSlashHandler;
 import org.example.command.np.NpTextHandler;
@@ -41,12 +51,6 @@ import org.example.command.resume.ResumeTextHandler;
 import org.example.command.skip.SkipCommand;
 import org.example.command.skip.SkipSlashHandler;
 import org.example.command.skip.SkipTextHandler;
-
-import javax.security.auth.login.LoginException;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Properties;
-import java.util.Set;
 
 
 public class Bot {
@@ -141,5 +145,9 @@ public class Bot {
         var popeCommand = new PopeCommand(popeService);
         builder.registerInstanceSupplier(PopeTextHandler.class, ctx -> new PopeTextHandler(popeCommand));
         builder.registerInstanceSupplier(PopeSlashHandler.class, ctx -> new PopeSlashHandler(popeCommand));
+
+        var loopCommand = new LoopCommand();
+        builder.registerInstanceSupplier(LoopTextHandler.class, ctx -> new LoopTextHandler(loopCommand));
+        builder.registerInstanceSupplier(LoopSlashHandler.class, ctx -> new LoopSlashHandler(loopCommand));
     }
 }
