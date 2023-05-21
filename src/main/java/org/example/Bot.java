@@ -1,12 +1,5 @@
 package org.example;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.security.auth.login.LoginException;
-
 import com.freya02.botcommands.api.CommandsBuilder;
 import com.freya02.botcommands.api.builder.ExtensionsBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -14,6 +7,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.example.command.bass.BassCommand;
 import org.example.command.bass.BassSlashHandler;
 import org.example.command.bass.BassTextHandler;
@@ -52,14 +46,20 @@ import org.example.command.skip.SkipCommand;
 import org.example.command.skip.SkipSlashHandler;
 import org.example.command.skip.SkipTextHandler;
 
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.Set;
+
 
 public class Bot {
 
-    public static final String TOKEN_PROPERTY_KEY = "TOKEN";
-    public static final String COMMAND_PREFIX_PROPERTY_KEY = "COMMAND_PREFIX";
+    private static final String TOKEN_PROPERTY_KEY = "TOKEN";
+    private static final String COMMAND_PREFIX_PROPERTY_KEY = "COMMAND_PREFIX";
 
     private static final Collection<GatewayIntent> INTENTS = Set.of(
             GatewayIntent.DIRECT_MESSAGES,
+            GatewayIntent.MESSAGE_CONTENT,
             GatewayIntent.GUILD_MESSAGES,
             GatewayIntent.GUILD_MESSAGE_REACTIONS,
             GatewayIntent.GUILD_VOICE_STATES,
@@ -75,28 +75,25 @@ public class Bot {
 
     private Properties loadProperties() {
         Properties prop = new Properties();
-        String token = System.getenv(TOKEN_PROPERTY_KEY);
-        String command_prefix = System.getenv(COMMAND_PREFIX_PROPERTY_KEY);
+        String token = Objects.requireNonNull(System.getenv(TOKEN_PROPERTY_KEY), TOKEN_PROPERTY_KEY + " is not found");
+        String commandPrefix = Objects.requireNonNull(System.getenv(COMMAND_PREFIX_PROPERTY_KEY), COMMAND_PREFIX_PROPERTY_KEY + " is not found");
         prop.setProperty(TOKEN_PROPERTY_KEY, token);
-        prop.setProperty(COMMAND_PREFIX_PROPERTY_KEY, command_prefix);
+        prop.setProperty(COMMAND_PREFIX_PROPERTY_KEY, commandPrefix);
         return prop;
     }
 
-    public void start() {
-        try {
+    public void start() throws InterruptedException {
             this.jda = JDABuilder
                     .create(properties.getProperty(TOKEN_PROPERTY_KEY), INTENTS)
                     .setActivity(Activity.playing("Ram pam pam!"))
                     .setStatus(OnlineStatus.ONLINE)
+                    .enableCache(CacheFlag.VOICE_STATE)
                     .build()
                     .awaitReady();
             var builder = CommandsBuilder.newBuilder(996830793433366568L)
                     .textCommandBuilder(textCommandsBuilder -> textCommandsBuilder.addPrefix(properties.getProperty(COMMAND_PREFIX_PROPERTY_KEY)));
-            builder.extensionsBuilder(this :: registerHandlersWithExecutors);
+            builder.extensionsBuilder(this::registerHandlersWithExecutors);
             builder.build(jda, this.getClass().getPackageName());
-        } catch (LoginException | InterruptedException | IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private void registerHandlersWithExecutors(ExtensionsBuilder builder) {

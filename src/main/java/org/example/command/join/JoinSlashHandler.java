@@ -5,7 +5,7 @@ import com.freya02.botcommands.api.annotations.Optional;
 import com.freya02.botcommands.api.application.annotations.AppOption;
 import com.freya02.botcommands.api.application.slash.GuildSlashEvent;
 import com.freya02.botcommands.api.application.slash.annotations.JDASlashCommand;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import org.example.command.general.BaseSlashHandler;
 import org.example.command.general.Command;
 

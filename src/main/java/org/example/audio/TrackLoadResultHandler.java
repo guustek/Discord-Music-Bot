@@ -31,7 +31,6 @@ public class TrackLoadResultHandler implements AudioLoadResultHandler {
             MessageUtils.replyWithEmbed(event, MessageUtils.buildTrackInfoEmbed("Currently playing", audioTrack));
         else
             MessageUtils.replyWithEmbed(event, MessageUtils.buildTrackInfoEmbed("Added to queue", audioTrack));
-
     }
 
     @Override
@@ -70,4 +69,5 @@ public class TrackLoadResultHandler implements AudioLoadResultHandler {
     public void loadFailed(FriendlyException e) {
         MessageUtils.replyWithEmbed(event, MessageUtils.buildBasicEmbed("Load failed"));
     }
+
 }

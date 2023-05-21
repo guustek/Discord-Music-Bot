@@ -1,25 +1,21 @@
 package org.example.command.pope;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.managers.AudioManager;
+import org.example.audio.PlayerManager;
+import org.example.audio.TrackScheduler;
+
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.dv8tion.jda.api.managers.AudioManager;
-import org.example.audio.PlayerManager;
-import org.example.audio.TrackScheduler;
+import java.util.concurrent.*;
 
 public class PopeService implements Runnable {
 
@@ -66,7 +62,7 @@ public class PopeService implements Runnable {
 
         PlayerManager.getPlayerManager().searchAndLoadTrack(null, guild.getSelfMember(), "https://www.youtube.com/watch?v=1dOt_VcbgyA");
 
-        for(AudioTrack track : queue){
+        for (AudioTrack track : queue) {
             PlayerManager.getPlayerManager().searchAndLoadTrack(
                     null,
                     Objects.requireNonNull(guild.getMember((User) track.getUserData())),

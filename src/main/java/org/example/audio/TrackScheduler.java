@@ -1,14 +1,16 @@
 package org.example.audio;
 
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
-
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
+import org.example.MessageUtils;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class TrackScheduler extends AudioEventAdapter {
 
@@ -29,7 +31,7 @@ public class TrackScheduler extends AudioEventAdapter {
         if (user != null)
             track.setUserData(user);
         var startedPlaying = this.audioPlayer.startTrack(track, true);
-        if (! startedPlaying) {
+        if (!startedPlaying) {
             queue.add(track);
         }
         return startedPlaying;
@@ -37,14 +39,15 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if(endReason == AudioTrackEndReason.FINISHED && isLooped) {
+        if (endReason == AudioTrackEndReason.FINISHED && isLooped) {
             player.playTrack(track.makeClone());
             return;
         }
         if (endReason.mayStartNext || endReason == AudioTrackEndReason.STOPPED) {
-            if (! this.queue.isEmpty()) {
+            if (!this.queue.isEmpty()) {
                 isLooped = false;
                 nextTrack();
+                return;
             }
         }
     }
